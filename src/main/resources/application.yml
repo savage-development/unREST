@@ -3,15 +3,24 @@ spring:
     name: Unrest-API
 
 application:
+  state:
+    path: /app/config/state/
+  user:
+    passwd: file:/app/config/passwd
+    group: file:/app/config/group
+    shadow: file:/app/config/shadow
   security:
+    path: /app/config/security/
     jwk: ${application.security.path}key.jwk
   operations:
     disk:
+      socket: /app/config/emhttpd.socket
       spin-up-all: ${application.operations.disk.socket}/update.htm?cmdSpinupAll=true&startState={state}&csrf_token={csrf}
       spin-down-all: ${application.operations.disk.socket}/update.htm?cmdSpindownAll=true&startState={state}&csrf_token={csrf}
       spin-up: ${application.operations.disk.socket}/update.htm?cmdSpinup={name}&startState={state}&csrf_token={csrf}
       spin-down: ${application.operations.disk.socket}/update.htm?cmdSpindown={name}&startState={state}&csrf_token={csrf}
     docker:
+      socket: /app/config/docker.sock
       version: "1.40"
       all-containers: ${application.operations.docker.socket}/v${application.operations.docker.version}/containers/json?all=true
       start-container: ${application.operations.docker.socket}/v${application.operations.docker.version}/containers/{id}/start

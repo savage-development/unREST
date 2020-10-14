@@ -1,8 +1,0 @@
-application:
-  state:
-    path: override-this-in-run-config
-#  operations:
-#    disk:
-#      socket: http://apollo.local:12345
-#    docker:
-#      socket: http://apollo.local:12346
