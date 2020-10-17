@@ -23,6 +23,8 @@ import com.savadev.unrest.dao.ini.ShareRepository;
 import com.savadev.unrest.dao.ini.StateResourceLoader;
 import com.savadev.unrest.dao.ini.VarIniRepository;
 import com.savadev.unrest.dao.ini.VarRepository;
+import com.savadev.unrest.service.config.ConfigService;
+import com.savadev.unrest.service.config.UnraidConfigService;
 import com.savadev.unrest.service.disk.DiskService;
 import com.savadev.unrest.service.disk.UnrestDiskService;
 import com.savadev.unrest.service.docker.DockerService;
@@ -173,6 +175,11 @@ public class UnrestConfiguration {
     @Bean
     UserService userService() {
         return new UnrestUserService(userRepository(), groupRepository(), shadowRepository());
+    }
+
+    @Bean
+    ConfigService configService() {
+        return new UnraidConfigService(varRepository());
     }
 
 }

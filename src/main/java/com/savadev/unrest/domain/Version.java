@@ -29,6 +29,12 @@ public class Version {
         return Optional.ofNullable(VERSIONS.get(version));
     }
 
+    public static Optional<Version> parse(int code) {
+        return VERSIONS.values().stream()
+                .filter(version -> version.code == code)
+                .findFirst();
+    }
+
     public String getVersion() {
         return version;
     }

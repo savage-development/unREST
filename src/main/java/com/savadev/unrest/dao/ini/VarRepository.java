@@ -7,6 +7,10 @@ public interface VarRepository {
 
     Mono<Version> getVersion();
 
+    Mono<String> getTimezone();
+
+    Mono<String> getComment();
+
     Mono<String> getMdState();
 
     Mono<String> getCsrfToken();

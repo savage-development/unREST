@@ -13,7 +13,7 @@ import reactor.core.publisher.Mono;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/docker")
+@RequestMapping("/api/docker")
 public class DockerController {
 
     private final DockerService dockerService;

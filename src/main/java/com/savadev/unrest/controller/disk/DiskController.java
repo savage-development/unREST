@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/disks")
+@RequestMapping("/api/disks")
 public class DiskController {
 
     private final DiskService diskService;

@@ -6,6 +6,10 @@ public interface Variables {
 
     Version getVersion();
 
+    String getTimezone();
+
+    String getComment();
+
     String getMdState();
 
     String getCsrfToken();

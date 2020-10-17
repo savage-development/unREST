@@ -12,6 +12,8 @@ public class VariableParser implements Parser<Variables> {
     public Variables parse(Profile.Section section) {
         return UnraidVariables.builder()
                 .withVersion(getVersion(section))
+                .withTimezone(getTimezone(section))
+                .withComment(getComment(section))
                 .withCsrfToken(getCsrfToken(section))
                 .withMdState(getMdState(section))
                 .build();
@@ -20,6 +22,16 @@ public class VariableParser implements Parser<Variables> {
     protected Version getVersion(Profile.Section section) {
         return IniUtils.getValue(section, "version", false)
                 .flatMap(Version::parse)
+                .orElse(null);
+    }
+
+    protected String getTimezone(Profile.Section section) {
+        return IniUtils.getValue(section, "timeZone", false)
+                .orElse(null);
+    }
+
+    protected String getComment(Profile.Section section) {
+        return IniUtils.getValue(section, "COMMENT", false)
                 .orElse(null);
     }
 

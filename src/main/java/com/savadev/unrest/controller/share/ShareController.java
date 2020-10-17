@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/shares")
+@RequestMapping("/api/shares")
 public class ShareController {
 
     private final ShareService shareService;

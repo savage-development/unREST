@@ -26,6 +26,20 @@ public class VarIniRepository implements VarRepository {
     }
 
     @Override
+    public Mono<String> getTimezone() {
+        return loader.load("var.ini", config)
+                .map(ini -> parser.parse(ini.get("?")))
+                .map(Variables::getTimezone);
+    }
+
+    @Override
+    public Mono<String> getComment() {
+        return loader.load("var.ini", config)
+                .map(ini -> parser.parse(ini.get("?")))
+                .map(Variables::getComment);
+    }
+
+    @Override
     public Mono<String> getMdState() {
         return loader.load("var.ini", config)
                 .map(ini -> parser.parse(ini.get("?")))

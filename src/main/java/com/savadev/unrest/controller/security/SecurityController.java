@@ -13,7 +13,7 @@ import reactor.core.publisher.Mono;
 import java.time.Duration;
 
 @RestController
-@RequestMapping("/security")
+@RequestMapping("/api/security")
 public class SecurityController {
 
     private final SecurityService securityService;
