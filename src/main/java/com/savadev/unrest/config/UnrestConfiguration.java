@@ -37,11 +37,16 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
+import org.springframework.http.client.reactive.UnixReactorClientHttpConnector;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
 
+import java.io.File;
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.UnknownHostException;
 import java.util.concurrent.Executors;
 
 @Configuration
@@ -84,30 +89,28 @@ public class UnrestConfiguration {
     @Bean
     WebClient diskOperationsClient() {
         return WebClient.builder()
-                .clientConnector(new ReactorClientHttpConnector(getOperationsClient(diskOperationsProperties())))
+                .clientConnector(new UnixReactorClientHttpConnector(getOperationsClient(diskOperationsProperties())))
                 .build();
     }
 
     @Bean
     WebClient dockerOperationsClient() {
         return WebClient.builder()
-                .clientConnector(new ReactorClientHttpConnector(getOperationsClient(dockerOperationsProperties())))
+                .clientConnector(new UnixReactorClientHttpConnector(getOperationsClient(dockerOperationsProperties())))
                 .build();
     }
 
     private HttpClient getOperationsClient(OperationsProperties properties) {
-        var socket = properties.getSocket();
         return HttpClient.create()
-                .remoteAddress(() -> isRemoteAddress(socket) ?
-                        new InetSocketAddress(socket.getHost(), socket.getPort()) :
-                        new DomainSocketAddress(socket.toString()));
+                .remoteAddress(() -> getSocketAddress(properties.getSocket()));
     }
 
-    private boolean isRemoteAddress(URI socket) {
-        return switch (socket.getScheme()) {
-            case "http", "https" -> true;
-            default -> false;
-        };
+    private SocketAddress getSocketAddress(URI socket) {
+        if (socket.getScheme() == null) {
+            return new DomainSocketAddress(socket.toString());
+        } else {
+            return new InetSocketAddress(socket.getHost(), socket.getPort());
+        }
     }
 
     @Bean
