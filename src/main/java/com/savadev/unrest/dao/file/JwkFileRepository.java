@@ -7,8 +7,10 @@ import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.core.io.buffer.DefaultDataBufferFactory;
 import reactor.core.publisher.Mono;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class JwkFileRepository implements JwkRepository {
@@ -29,13 +31,16 @@ public class JwkFileRepository implements JwkRepository {
 
     @Override
     public Mono<JWK> rotate(JWK jwk) {
-        try {
-            return DataBufferUtils.write(DataBufferUtils.read(new ByteArrayResource(jwk.toJSONString().getBytes()),
-                    new DefaultDataBufferFactory(), 4096), Paths.get(new URI("file:" + properties.getJwk())))
-                    .thenReturn(jwk);
-        } catch (URISyntaxException e) {
-            return Mono.error(e);
+        if (!Files.exists(Paths.get(properties.getJwk()))) {
+            try {
+                Files.createDirectory(Paths.get(properties.getJwk()).getParent());
+            } catch (IOException e) {
+                return Mono.error(e);
+            }
         }
+        return DataBufferUtils.write(DataBufferUtils.read(new ByteArrayResource(jwk.toJSONString().getBytes()),
+                new DefaultDataBufferFactory(), 4096), Paths.get(properties.getJwk()))
+                .thenReturn(jwk);
     }
 
 }
