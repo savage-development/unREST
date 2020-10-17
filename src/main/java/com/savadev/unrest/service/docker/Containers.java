@@ -54,4 +54,16 @@ public class Containers {
         return container -> container.getState().equalsIgnoreCase(state);
     }
 
+    public static Predicate<Container> isSelf() {
+        return Containers::isSelf;
+    }
+
+    public static Predicate<Container> isNotSelf() {
+        return container -> !isSelf(container);
+    }
+
+    public static boolean isSelf(Container container) {
+        return "savadev/unrest".equalsIgnoreCase(container.getImage().split(":")[0]);
+    }
+
 }

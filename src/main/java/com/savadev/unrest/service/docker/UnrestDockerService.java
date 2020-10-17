@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.function.Function;
+
 public class UnrestDockerService implements DockerService {
 
     private static final Logger logger = LoggerFactory.getLogger(UnrestDockerService.class);
@@ -34,72 +36,75 @@ public class UnrestDockerService implements DockerService {
         return getContainers()
                 .filter(Containers.stopped())
                 .parallel()
-                .flatMap(container -> start(container.getId()))
+                .flatMap(this::start)
                 .then();
     }
 
     @Override
     public Mono<Void> start(String id) {
         logger.info("Starting container: {}", id);
-        return operations.start(id);
+        return getContainer(id).flatMap(this::start);
     }
 
     @Override
     public Mono<Void> stop() {
         return getContainers()
+                .filter(Containers.isNotSelf())
                 .filter(Containers.started())
                 .parallel()
-                .flatMap(container -> stop(container.getId()))
+                .flatMap(this::stop)
                 .then();
     }
 
     @Override
     public Mono<Void> stop(String id) {
         logger.info("Stopping container: {}", id);
-        return operations.stop(id);
+        return getContainer(id).flatMap(this::stop);
     }
 
     @Override
     public Mono<Void> restart() {
         return getContainers()
                 .parallel()
-                .flatMap(container -> restart(container.getId()))
+                .flatMap(this::restart)
                 .then();
     }
 
     @Override
     public Mono<Void> restart(String id) {
         logger.info("Restarting container: {}", id);
-        return operations.restart(id);
+        return getContainer(id).flatMap(this::restart);
     }
 
     @Override
     public Mono<Void> kill() {
         return getContainers()
+                .filter(Containers.isNotSelf())
                 .parallel()
-                .flatMap(container -> restart(container.getId()))
+                .flatMap(this::kill)
                 .then();
     }
 
     @Override
     public Mono<Void> kill(String id) {
         logger.info("Killing container: {}", id);
-        return operations.kill(id);
+        return getContainer(id).flatMap(this::kill);
     }
 
     @Override
     public Mono<Void> pause() {
         return getContainers()
+                .filter(Containers.isNotSelf())
                 .filter(Containers.unpaused())
                 .parallel()
-                .flatMap(container -> pause(container.getId()))
+                .flatMap(this::pause)
                 .then();
     }
 
     @Override
     public Mono<Void> pause(String id) {
         logger.info("Pausing container: {}", id);
-        return operations.pause(id);
+        return getContainer(id).flatMap(this::pause);
     }
 
     @Override
@@ -107,14 +112,47 @@ public class UnrestDockerService implements DockerService {
         return getContainers()
                 .filter(Containers.paused())
                 .parallel()
-                .flatMap(container -> unpause(container.getId()))
+                .flatMap(this::unpause)
                 .then();
     }
 
     @Override
     public Mono<Void> unpause(String id) {
         logger.info("Unpausing container: {}", id);
-        return operations.unpause(id);
+        return getContainer(id).flatMap(this::unpause);
+    }
+
+    private Mono<Void> start(Container container) {
+        return operations.start(container.getId());
+    }
+
+    private Mono<Void> stop(Container container) {
+        if (Containers.isSelf(container)) {
+            return Mono.error(new DockerServiceException("Attempt to stop unREST API container blocked."));
+        }
+        return operations.stop(container.getId());
+    }
+
+    private Mono<Void> restart(Container container) {
+        return operations.restart(container.getId());
+    }
+
+    private Mono<Void> kill(Container container) {
+        if (Containers.isSelf(container)) {
+            return Mono.error(new DockerServiceException("Attempt to kill unREST API container blocked."));
+        }
+        return operations.kill(container.getId());
+    }
+
+    private Mono<Void> pause(Container container) {
+        if (Containers.isSelf(container)) {
+            return Mono.error(new DockerServiceException("Attempt to pause unREST API container blocked."));
+        }
+        return operations.pause(container.getId());
+    }
+
+    private Mono<Void> unpause(Container container) {
+        return operations.unpause(container.getId());
     }
 
 }
