@@ -1,2 +1,2 @@
 #!/bin/bash
-docker build -t savadev/unrest:$1-latest .
+docker build -t savadev/unrest:$1-latest ../

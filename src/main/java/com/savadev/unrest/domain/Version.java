@@ -43,4 +43,8 @@ public class Version {
         return code;
     }
 
+    @Override
+    public String toString() {
+        return version;
+    }
 }

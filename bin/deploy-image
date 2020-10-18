@@ -1,2 +1,2 @@
 #!/bin/bash
-docker push savadev/unrest:$1
+docker push savadev/unrest:$1-latest

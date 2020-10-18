@@ -4,10 +4,9 @@ import com.savadev.unrest.dao.client.docker.DockerOperations;
 import com.savadev.unrest.domain.docker.container.Container;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.function.Function;
 
 public class UnrestDockerService implements DockerService {
 
@@ -128,7 +127,7 @@ public class UnrestDockerService implements DockerService {
 
     private Mono<Void> stop(Container container) {
         if (Containers.isSelf(container)) {
-            return Mono.error(new DockerServiceException("Attempt to stop unREST API container blocked."));
+            return Mono.error(new DockerServiceException(HttpStatus.BAD_REQUEST, "Attempt to stop unREST API container blocked."));
         }
         return operations.stop(container.getId());
     }
@@ -139,14 +138,14 @@ public class UnrestDockerService implements DockerService {
 
     private Mono<Void> kill(Container container) {
         if (Containers.isSelf(container)) {
-            return Mono.error(new DockerServiceException("Attempt to kill unREST API container blocked."));
+            return Mono.error(new DockerServiceException(HttpStatus.BAD_REQUEST, "Attempt to kill unREST API container blocked."));
         }
         return operations.kill(container.getId());
     }
 
     private Mono<Void> pause(Container container) {
         if (Containers.isSelf(container)) {
-            return Mono.error(new DockerServiceException("Attempt to pause unREST API container blocked."));
+            return Mono.error(new DockerServiceException(HttpStatus.BAD_REQUEST, "Attempt to pause unREST API container blocked."));
         }
         return operations.pause(container.getId());
     }
