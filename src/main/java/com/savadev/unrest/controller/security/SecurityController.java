@@ -29,8 +29,8 @@ public class SecurityController {
     }
 
     @GetMapping("/jwt")
-    Mono<ResponseEntity<String>> generateJwt(@RequestParam(value = "ttl", required = false) Duration ttl) {
-        return securityService.generateJwt(ttl).map(jwt -> ResponseEntity.ok(jwt.serialize()));
+    Mono<ResponseEntity<GenerateJwtResponse>> generateJwt(@RequestParam(value = "ttl", required = false) Duration ttl) {
+        return securityService.generateJwt(ttl).map(jwt -> ResponseEntity.ok(new GenerateJwtResponse(jwt)));
     }
 
 }
