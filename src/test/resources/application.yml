@@ -4,15 +4,15 @@ spring:
 
 application:
   state:
-    disks: classpath:/state/disks.ini
-    shares: classpath:/state/shares.ini
-    var: classpath:/state/var.ini
+    disks: classpath:/app/config/state/disks.ini
+    shares: classpath:/app/config/state/shares.ini
+    var: classpath:/app/config/state/var.ini
   user:
-    passwd: classpath:/passwd
-    group: classpath:/group
-    shadow: classpath:/shadow
+    passwd: classpath:/app/config/passwd
+    group: classpath:/app/config/group
+    shadow: classpath:/app/config/shadow
   security:
-    jwk: classpath:/security/key.jwk
+    jwk: classpath:/app/config/security/key.jwk
   operations:
     disk:
       socket: /app/config/emhttpd.socket
