@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: Unrest-API
+
+application:
+  state:
+    disks: classpath:/state/disks.ini
+    shares: classpath:/state/shares.ini
+    var: classpath:/state/var.ini
+  user:
+    passwd: classpath:/passwd
+    group: classpath:/group
+    shadow: classpath:/shadow
+  security:
+    jwk: classpath:/security/key.jwk
+  operations:
+    disk:
+      socket: /app/config/emhttpd.socket
+      spin-up-all: /update.htm?cmdSpinupAll=true&startState={state}&csrf_token={csrf}
+      spin-down-all: /update.htm?cmdSpindownAll=true&startState={state}&csrf_token={csrf}
+      spin-up: /update.htm?cmdSpinup={name}&startState={state}&csrf_token={csrf}
+      spin-down: /update.htm?cmdSpindown={name}&startState={state}&csrf_token={csrf}
+    docker:
+      socket: /app/config/docker.sock
+      version: "1.40"
+      all-containers: /v${application.operations.docker.version}/containers/json?all=true
+      start-container: /v${application.operations.docker.version}/containers/{id}/start
+      stop-container: /v${application.operations.docker.version}/containers/{id}/stop
+      restart-container: /v${application.operations.docker.version}/containers/{id}/restart
+      kill-container: /v${application.operations.docker.version}/containers/{id}/kill
+      pause-container: /v${application.operations.docker.version}/containers/{id}/pause
+      unpause-container: /v${application.operations.docker.version}/containers/{id}/unpause

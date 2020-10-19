@@ -30,7 +30,7 @@ public class DiskIniRepository implements DiskRepository {
 
     @Override
     public Flux<ParityDisk> getParity() {
-        return Mono.from(loader.load("disks.ini"))
+        return Mono.from(loader.load())
                 .flatMapMany(ini -> Flux.fromStream(ini.keySet().stream()
                         .filter(s -> s.contains("parity"))
                         .map(ini::get)))
@@ -43,7 +43,7 @@ public class DiskIniRepository implements DiskRepository {
 
     @Override
     public Flux<DataDisk> getData() {
-        return Mono.from(loader.load("disks.ini"))
+        return Mono.from(loader.load())
                 .flatMapMany(ini -> Flux.fromStream(ini.keySet().stream()
                         .filter(s -> s.contains("disk"))
                         .map(ini::get)))
@@ -53,7 +53,7 @@ public class DiskIniRepository implements DiskRepository {
 
     @Override
     public Flux<CacheDisk> getCache() {
-        return Mono.from(loader.load("disks.ini"))
+        return Mono.from(loader.load())
                 .flatMapMany(ini -> Flux.fromStream(ini.keySet().stream()
                         .filter(s -> s.contains("cache"))
                         .map(ini::get)))
@@ -63,7 +63,7 @@ public class DiskIniRepository implements DiskRepository {
 
     @Override
     public Flux<FlashDisk> getFlash() {
-        return Mono.from(loader.load("disks.ini"))
+        return Mono.from(loader.load())
                 .flatMapMany(ini -> Flux.fromStream(ini.keySet().stream()
                         .filter(s -> s.contains("flash"))
                         .map(ini::get)))

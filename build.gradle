@@ -1,6 +1,7 @@
 plugins {
-    id 'org.springframework.boot' version '2.4.0-SNAPSHOT'
+    id 'org.springframework.boot' version '2.4.0-M4'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id 'org.asciidoctor.convert' version '1.5.8'
     id 'java'
 }
 
@@ -9,9 +10,12 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '15'
 
 repositories {
-    maven { url "https://repo.spring.io/snapshot" }
-    maven { url "https://repo.spring.io/milestone" }
     mavenCentral()
+    maven { url "https://repo.spring.io/milestone" }
+}
+
+ext {
+    set('snippetsDir', file("build/generated-snippets"))
 }
 
 dependencies {
@@ -22,13 +26,26 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.11'
     implementation 'commons-codec:commons-codec:1.15'
 
-    testImplementation('org.springframework.boot:spring-boot-starter-test') {
-        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-    }
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.projectreactor:reactor-test'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-webtestclient'
     testImplementation 'org.springframework.security:spring-security-test'
 }
 
 test {
+    outputs.dir snippetsDir
     useJUnitPlatform()
+}
+
+asciidoctor {
+    inputs.dir snippetsDir
+    dependsOn test
+}
+
+bootJar {
+    println("${asciidoctor.outputDir}")
+    dependsOn asciidoctor
+    from ("${asciidoctor.outputDir}/html5") {
+        into 'static/docs'
+    }
 }
