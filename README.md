@@ -50,8 +50,17 @@ This API is not available yet from the community applications plugin. It will ne
 
 ## Examples
 
+##### Get All Disks
+`curl -i --user root:Password -H "Content-Type: application/json" -H "Accept: application/json" -X GET http://unraid:port/api/disks`
+
 ##### All Disks Up
 `curl -i --user root:Password -H "Content-Type: application/json" -H "Accept: application/json" -X POST http://unraid:port/api/disks/up`
 
 ##### All Disks Down
 `curl -i --user root:Password -H "Content-Type: application/json" -H "Accept: application/json" -X POST http://unraid:port/api/disks/down`
+
+##### Spin Up By IDX
+`curl -i --user root:Password -H "Content-Type: application/json" -H "Accept: application/json" -X POST http://unraid:port/api/disk/{IDX}/down`
+
+##### Spin Down By IDX
+`curl -i --user root:Password -H "Content-Type: application/json" -H "Accept: application/json" -X POST http://unraid:port/api/disk/{IDX}/up`
