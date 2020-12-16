@@ -16,11 +16,14 @@ public class CryptPasswordEncoder implements PasswordEncoder {
     @Override
     public boolean matches(CharSequence rawPassword, String encodedPassword) {
         try {
+
+            // If the user does not have a password set, then let them through.
             if (encodedPassword == null || encodedPassword.isEmpty()) {
                 return true;
             }
 
-            if (StringUtils.isBlank(encodedPassword)) {
+            // User did not send a password when one is required.
+            if (StringUtils.isBlank(rawPassword)) {
                 return false;
             }
 
