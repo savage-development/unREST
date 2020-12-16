@@ -12,6 +12,8 @@ public interface DiskService {
 
     Flux<Disk> getDisks();
 
+    Mono<Disk> getDiskById(int idx);
+
     Flux<ParityDisk> getParityDisks();
 
     Flux<DataDisk> getDataDisks();

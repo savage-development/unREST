@@ -38,7 +38,7 @@ import org.ini4j.Config;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.client.reactive.UnixReactorClientHttpConnector;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
 
@@ -77,14 +77,14 @@ public class UnrestConfiguration {
     @Bean
     WebClient diskOperationsClient() {
         return WebClient.builder()
-                .clientConnector(new UnixReactorClientHttpConnector(getOperationsClient(diskOperationsProperties())))
+                .clientConnector(new ReactorClientHttpConnector(getOperationsClient(diskOperationsProperties())))
                 .build();
     }
 
     @Bean
     WebClient dockerOperationsClient() {
         return WebClient.builder()
-                .clientConnector(new UnixReactorClientHttpConnector(getOperationsClient(dockerOperationsProperties())))
+                .clientConnector(new ReactorClientHttpConnector(getOperationsClient(dockerOperationsProperties())))
                 .build();
     }
 

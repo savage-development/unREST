@@ -7,8 +7,13 @@ import com.savadev.unrest.domain.disk.DataDisk;
 import com.savadev.unrest.domain.disk.Disk;
 import com.savadev.unrest.domain.disk.FlashDisk;
 import com.savadev.unrest.domain.disk.ParityDisk;
+import org.springframework.http.HttpStatus;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public class UnrestDiskService implements DiskService {
 
@@ -29,6 +34,18 @@ public class UnrestDiskService implements DiskService {
                 getCacheDisks(),
                 getFlashDisks()
         );
+    }
+
+    private <X extends Exception> Mono<Disk> getDisk(Predicate<Disk> predicate, Supplier<X> supplier) {
+        return getDisks()
+                .filter(predicate)
+                .switchIfEmpty(Mono.error(supplier.get()))
+                .next();
+    }
+
+    @Override
+    public Mono<Disk> getDiskById(int idx) {
+        return getDisk(Disks.byIdx(idx), () -> new DiskServiceException(HttpStatus.NOT_FOUND, String.format("Disk: %s not found.", idx)));
     }
 
     @Override
@@ -53,11 +70,13 @@ public class UnrestDiskService implements DiskService {
 
     @Override
     public Mono<Void> spinUp(int idx) {
-        return getDisks()
-                .filter(Disks.byIdx(idx))
-                .filter(Disks.isNotFlash())
-                .next()
-                .flatMap(operations::spinUp);
+        return getDiskById(idx)
+                .flatMap(disk -> {
+                    if (Disks.isFlash().test(disk)) {
+                        return Mono.error(new DiskServiceException(HttpStatus.BAD_REQUEST, "Cannot spin up flash drives"));
+                    }
+                    return operations.spinUp(disk);
+                });
     }
 
     @Override
@@ -91,11 +110,13 @@ public class UnrestDiskService implements DiskService {
 
     @Override
     public Mono<Void> spinDown(int idx) {
-        return getDisks()
-                .filter(Disks.byIdx(idx))
-                .filter(Disks.isNotFlash())
-                .next()
-                .flatMap(operations::spinDown);
+        return getDiskById(idx)
+                .flatMap(disk -> {
+                    if (Disks.isFlash().test(disk)) {
+                        return Mono.error(new DiskServiceException(HttpStatus.BAD_REQUEST, "Cannot spin down flash drives"));
+                    }
+                    return operations.spinDown(disk);
+                });
     }
 
     @Override
