@@ -16,8 +16,8 @@ public class CryptPasswordEncoder implements PasswordEncoder {
     @Override
     public boolean matches(CharSequence rawPassword, String encodedPassword) {
         try {
-            if (StringUtils.isBlank(encodedPassword)) {
-                return false;
+            if (encodedPassword == null || encodedPassword.isEmpty()) {
+                return true;
             }
             var hash = Crypt.crypt(rawPassword.toString(), getSalt(encodedPassword));
             return StringUtils.equals(hash, encodedPassword);
