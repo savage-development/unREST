@@ -19,6 +19,11 @@ public class CryptPasswordEncoder implements PasswordEncoder {
             if (encodedPassword == null || encodedPassword.isEmpty()) {
                 return true;
             }
+
+            if (StringUtils.isBlank(encodedPassword)) {
+                return false;
+            }
+
             var hash = Crypt.crypt(rawPassword.toString(), getSalt(encodedPassword));
             return StringUtils.equals(hash, encodedPassword);
         } catch (Exception ex) {
