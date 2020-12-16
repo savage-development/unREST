@@ -47,3 +47,11 @@ This API is not available yet from the community applications plugin. It will ne
 | Port | App Port | 8080 | Whichever Port You Want | TCP |
 
 7. Click `Apply`
+
+Examples
+
+##### All Disks Up
+`curl -i --user root:Password -H "Content-Type: application/json" -H "Accept: application/json" -X POST http://unraid:port/api/disks/up`
+
+##### All Disks Down
+`curl -i --user root:Password -H "Content-Type: application/json" -H "Accept: application/json" -X POST http://unraid:port/api/disks/down`
