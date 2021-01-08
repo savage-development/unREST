@@ -73,7 +73,7 @@ Upon rotation, all tokens generated prior to the rotation become invalid.
 
 `curl -i --user root:Password -H "Content-Type: application/json" -H "Accept: application/json" -X POST http://unraid:port/api/security/jwk/rotate`
 
-##Disk API
+## Disk API
 
 ##### Get All Disks
 `curl -i --user root:Password -H "Content-Type: application/json" -H "Accept: application/json" -X GET http://unraid:port/api/disks`
@@ -120,11 +120,11 @@ Upon rotation, all tokens generated prior to the rotation become invalid.
 ##### Spin Down By IDX
 `curl -i --user root:Password -H "Content-Type: application/json" -H "Accept: application/json" -X POST http://unraid:port/api/disk/{IDX}/up`
 
-##Configuration API
+## Configuration API
 ##### Get Unraid Configuration Variables
 `curl -i --user root:Password -H "Content-Type: application/json" -H "Accept: application/json" -X GET http://unraid:port/api/config`
 
-##Docker API
+## Docker API
 
 **Note 1:** All docker APIs require a user with `docker` permissions (user belongs to the docker unix group).
 
