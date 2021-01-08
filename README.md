@@ -48,16 +48,19 @@ This API is not available yet from the community applications plugin. It will ne
 
 7. Click `Apply`
 
-#API Operations
-##Security
+# API Operations
+## Security
 All APIs are protected using the same authentication mechanisms as Unraid itself. APIs can be invoked by any user with the proper permissions. For example,
 calling a Docker API with a user that is not in the docker group will result in an authorization error.
 
 There are two ways to successfully authenticate an API call.
-###Basic Authentication
+
+### Basic Authentication
+
 Basic authentication works by Base64 encoding your username and password and sending them in the `Authorization: Basic {credentials}` header of the request.
 
-###Bearer Authorization (JWT)
+### Bearer Authorization (JWT)
+
 Bearer authorization works by generating a cryptographically secure token which can then be used to make API calls on behalf of the user who generated the token.
 These tokens have the same permissions as the user who generated them.
 The bearer token should be included in the `Authorization: Bearer {token}` header of the request.
