@@ -64,14 +64,12 @@ public class SecurityConfiguration {
         return new SecurityProperties();
     }
 
-    //    @Bean
     ReactiveAuthenticationManager basicAuthenticationManager() {
         var manager = new UserDetailsRepositoryReactiveAuthenticationManager(userService);
         manager.setPasswordEncoder(passwordEncoder());
         return manager;
     }
 
-    //    @Bean
     ReactiveAuthenticationManager jwtAuthenticationManager() {
         return new JwtReactiveAuthenticationManager(NimbusReactiveJwtDecoder
                 .withJwkSource(signedJWT -> Flux.from(securityService().getJwk()))
@@ -86,7 +84,8 @@ public class SecurityConfiguration {
 
     @Bean
     JwkSetResourceLoader jwkSetResourceLoader() {
-        return new JwkSetResourceLoader();
+        var props = securityProperties();
+        return new JwkSetResourceLoader(props.getJwk());
     }
 
     @Bean

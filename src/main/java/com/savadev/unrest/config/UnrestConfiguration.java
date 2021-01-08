@@ -38,7 +38,7 @@ import org.ini4j.Config;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.client.reactive.UnixReactorClientHttpConnector;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
 
@@ -75,26 +75,16 @@ public class UnrestConfiguration {
     }
 
     @Bean
-    StateResourceLoader resourceLoader() {
-        return new StateResourceLoader(stateProperties(), Executors.newCachedThreadPool());
-    }
-
-    @Bean
-    FileResourceLoader fileResourceLoader() {
-        return new FileResourceLoader();
-    }
-
-    @Bean
     WebClient diskOperationsClient() {
         return WebClient.builder()
-                .clientConnector(new UnixReactorClientHttpConnector(getOperationsClient(diskOperationsProperties())))
+                .clientConnector(new ReactorClientHttpConnector(getOperationsClient(diskOperationsProperties())))
                 .build();
     }
 
     @Bean
     WebClient dockerOperationsClient() {
         return WebClient.builder()
-                .clientConnector(new UnixReactorClientHttpConnector(getOperationsClient(dockerOperationsProperties())))
+                .clientConnector(new ReactorClientHttpConnector(getOperationsClient(dockerOperationsProperties())))
                 .build();
     }
 
@@ -123,34 +113,40 @@ public class UnrestConfiguration {
 
     @Bean
     DiskRepository diskRepository() {
-        return new DiskIniRepository(resourceLoader());
+        var properties = stateProperties();
+        return new DiskIniRepository(new StateResourceLoader(properties.getDisks(), Executors.newCachedThreadPool()));
     }
 
     @Bean
     VarRepository varRepository() {
+        var properties = stateProperties();
         var config = new Config();
         config.setGlobalSection(true);
-        return new VarIniRepository(config, resourceLoader());
+        return new VarIniRepository(config, new StateResourceLoader(properties.getVar(), config, Executors.newCachedThreadPool()));
     }
 
     @Bean
     ShareRepository shareRepository() {
-        return new ShareIniRepository(resourceLoader());
+        var properties = stateProperties();
+        return new ShareIniRepository(new StateResourceLoader(properties.getShares(), Executors.newCachedThreadPool()));
     }
 
     @Bean
     UserRepository userRepository() {
-        return new UserFileRepository(userProperties(), fileResourceLoader());
+        var props = userProperties();
+        return new UserFileRepository(new FileResourceLoader(props.getPasswd()));
     }
 
     @Bean
     ShadowRepository shadowRepository() {
-        return new ShadowFileRepository(userProperties(), fileResourceLoader());
+        var props = userProperties();
+        return new ShadowFileRepository(new FileResourceLoader(props.getShadow()));
     }
 
     @Bean
     GroupRepository groupRepository() {
-        return new GroupFileRepository(userProperties(), fileResourceLoader());
+        var props = userProperties();
+        return new GroupFileRepository(new FileResourceLoader(props.getGroup()));
     }
 
     @Bean

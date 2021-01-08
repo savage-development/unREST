@@ -27,6 +27,7 @@ public class UnrestDockerService implements DockerService {
     public Mono<? extends Container> getContainer(String id) {
         return getContainers()
                 .filter(Containers.forId(id))
+                .switchIfEmpty(Mono.error(new DockerServiceException(HttpStatus.NOT_FOUND, String.format("Container with ID: %s not found.", id))))
                 .next();
     }
 

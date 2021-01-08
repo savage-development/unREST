@@ -4,6 +4,6 @@ import org.reactivestreams.Publisher;
 
 public interface ResourceLoader<T> {
 
-    Publisher<T> load(String resource);
+    Publisher<T> load();
 
 }

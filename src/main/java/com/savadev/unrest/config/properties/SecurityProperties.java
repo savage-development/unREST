@@ -1,24 +1,16 @@
 package com.savadev.unrest.config.properties;
 
+import java.net.URI;
+
 public class SecurityProperties {
 
-    private String path;
+    private URI jwk;
 
-    private String jwk;
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public String getJwk() {
+    public URI getJwk() {
         return jwk;
     }
 
-    public void setJwk(String jwk) {
+    public void setJwk(URI jwk) {
         this.jwk = jwk;
     }
 }

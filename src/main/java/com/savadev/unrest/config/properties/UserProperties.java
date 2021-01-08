@@ -1,34 +1,36 @@
 package com.savadev.unrest.config.properties;
 
+import java.net.URI;
+
 public class UserProperties {
 
-    private String passwd;
+    private URI passwd;
 
-    private String group;
+    private URI group;
 
-    private String shadow;
+    private URI shadow;
 
-    public String getPasswd() {
+    public URI getPasswd() {
         return passwd;
     }
 
-    public void setPasswd(String passwd) {
+    public void setPasswd(URI passwd) {
         this.passwd = passwd;
     }
 
-    public String getGroup() {
+    public URI getGroup() {
         return group;
     }
 
-    public void setGroup(String group) {
+    public void setGroup(URI group) {
         this.group = group;
     }
 
-    public String getShadow() {
+    public URI getShadow() {
         return shadow;
     }
 
-    public void setShadow(String shadow) {
+    public void setShadow(URI shadow) {
         this.shadow = shadow;
     }
 }

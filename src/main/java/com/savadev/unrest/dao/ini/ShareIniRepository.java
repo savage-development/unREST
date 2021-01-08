@@ -20,7 +20,7 @@ public class ShareIniRepository implements ShareRepository {
 
     @Override
     public Flux<Share> getShares() {
-        return Mono.from(loader.load("shares.ini"))
+        return Mono.from(loader.load())
                 .flatMapMany(ini -> Flux.fromIterable(ini.keySet()
                         .stream()
                         .map(ini::get)

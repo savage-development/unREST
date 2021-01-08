@@ -183,3 +183,4 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+/src/test/resources/app/

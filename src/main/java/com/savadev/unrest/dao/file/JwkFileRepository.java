@@ -24,7 +24,7 @@ public class JwkFileRepository implements JwkRepository {
 
     @Override
     public Mono<JWK> getJwk() {
-        return loader.load(properties.getJwk());
+        return loader.load();
     }
 
     @Override
